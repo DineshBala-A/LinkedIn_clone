@@ -4,8 +4,11 @@ import {useTheme} from '@emotion/react';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import { BrowserRouter as Router,Routes,Route } from 'react-router-dom';
-import Login from '../Authenticate/Login.js'
 import {useLocation} from 'react-router-dom';
+
+//custom components
+import SignUp from '../Authenticate/SignUp';
+import Login from '../Authenticate/Login.js'
 function Screen({updateMode}) {
     const location =useLocation();
     const path=location.pathname;
@@ -14,16 +17,17 @@ function Screen({updateMode}) {
   return (
   <>
     <Paper>
-     { path!=="/login"?
+     { path!=="/login" && path!=="/signup"?
         <PrimarySearchAppBar updateMode={updateMode}/>:
         <></>
      }       
-    <Container sx={{marginTop:path!="/login"?"60px":0,minHeight:"100vh",}}>
+    <Container sx={{marginTop:path!="/login" && path!=="/signup"?"60px":0,minHeight:"100vh",}}>
         <br/>
         <Routes>
             <Route path="/login" element={<Login/>}/>
+            <Route path="/signup" element={<SignUp/>}/>
             <Route path="/" exact element={<Content/>}/> 
-        </Routes>
+        </Routes> 
     </Container>
     </Paper>
   </>

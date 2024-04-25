@@ -14,6 +14,8 @@ import {  ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';
 
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -100,7 +102,7 @@ const theme = useTheme();
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

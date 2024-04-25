@@ -1,25 +1,78 @@
-import logo from './logo.svg';
-import './App.css';
+import {React,useState} from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Screen from './Components/Screen/Screen';
+import { ThemeProvider } from '@emotion/react';
+import { createTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
-function App() {
+
+const App= () => {
+  const [mode,setMode]=useState('dark')
+
+
+  const updateMode=(receivedMode)=>{
+    setMode(receivedMode);
+  }
+  
+  const theme=createTheme({
+    palette:{
+      mode,
+      ...(mode === 'light'?
+        {//light
+          primary:{
+            // main:'',
+            // main:'#fff',
+            main:'#2962ff'//use this *****
+
+            
+          },
+          // secondary:{
+          //   main:'#2962ff'
+          // },
+          background:{
+            // default:'rgba(255,255,251)',
+            default:'#f6f6f6',
+            paper:'#fff',
+          }
+        }
+        :{//dark
+          primary:{
+            // main:'rgb(30, 30, 30)'
+            // main:'#333'
+              main:'#2962ff'
+
+          },
+          // secondary:{
+          //   main:'#2962ff'
+          // },
+          background:{
+            default:'rgb(18, 18, 18)',
+            // paper:'rgb(30,30,30)',
+            paper:'#111111',
+          }
+        }
+      )
+      
+    }, 
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <Router>
+            <SnackbarProvider maxSnack={3}>
+              {/* <Box sx={{display:'flex',justifyContent:'flex-end'}}> */}
+              <Box>
+                <Screen updateMode={updateMode}/>
+              </Box>
+              </SnackbarProvider>  
+          </Router>
+        </ThemeProvider>  
+    </>
   );
-}
+};
 
 export default App;

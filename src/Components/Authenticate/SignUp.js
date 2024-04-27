@@ -13,17 +13,54 @@ import Container from '@mui/material/Container';
 import {  ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';
+import { host } from '../../host';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function SignUp() {
+  const navigate = useNavigate();
 const theme = useTheme();
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+      passwordCfm: data.get('password-cfm'),
     });
+    if(data.password!==data.passwordCfm){
+      console.error("password mismatch")
+      return ;
+    }
+
+    // console.log({"email":data.get("email"),"password":data.get("password-cfm")});
+    const controller=new AbortController();
+    const signal=controller.signal;
+    fetch(`${host}/Profile`,
+    {
+      signal,
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({"email": data.get('email'),"password":data.get('password-cfm')}),
+    }
+  ).then(response=>{
+    if(!response.ok){
+      throw new Error("Login failed");
+    }
+    return response.json();
+  }).then(data=>{
+    console.log("successfully signedup ")
+    console.log(data);
+    navigate('/feed', { state: { user_id: data.userid } });
+  }).catch(e=>{
+    console.error(e.message);
+  })
+  return()=>{
+    controller.abort();
+  }
   };
 
   return (
@@ -77,7 +114,7 @@ const theme = useTheme();
               required
               fullWidth
               size="small"
-              name="password"
+              name="password-cfm"
               label="Confirm Password"
               type="password"
               id="password-cfm"
@@ -93,7 +130,7 @@ const theme = useTheme();
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              component={NavLink} to="/"
+              // component={NavLink} to="/Feed"
             >
               Sign Up
             </Button>

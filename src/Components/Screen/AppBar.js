@@ -22,6 +22,7 @@ import Work from '@mui/icons-material/Work';
 import DarkMode from '@mui/icons-material/DarkMode';
 import LightMode from '@mui/icons-material/LightMode';
 import { NavLink } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout'; 
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -112,9 +113,11 @@ export default function PrimarySearchAppBar({updateMode}) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={NavLink} to="/profile">Profile</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose} component={NavLink} to="/">Home</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={NavLink} to="/profile">Notifi</MenuItem> */}
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Sign out</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={NavLink} to="/Login">Sign out</MenuItem>
     </Menu>
   );
 
@@ -134,16 +137,45 @@ export default function PrimarySearchAppBar({updateMode}) {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
+    >  
+      <MenuItem onClick={handleProfileMenuOpen} >
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+
+        >
+          <AccountCircle />
+        </IconButton >
+        <p>Profile</p>
+      </MenuItem>
+      <MenuItem component={NavLink} to="/feed">
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={2} color="error">
+            <Home />
+          </Badge>
+        </IconButton>
+        <p>Home</p>
+      </MenuItem>
+      <MenuItem component={NavLink} to="/jobs">
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
+            <Work />
+          </Badge>
+        </IconButton>
+        <p>Jobs</p>
+      </MenuItem >
+      <MenuItem component={NavLink} to="/">
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={3} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem  component={NavLink} to="/notification">
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
@@ -155,18 +187,13 @@ export default function PrimarySearchAppBar({updateMode}) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
+      <MenuItem component={NavLink} to="/login">
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          < LogoutIcon/>
         </IconButton>
-        <p>Profile</p>
+        <p>Sign Out</p>
       </MenuItem>
+  
     </Menu>
   );
 
@@ -183,14 +210,14 @@ export default function PrimarySearchAppBar({updateMode}) {
           >
             <MenuIcon />
           </IconButton> */}
-          <div style={{height:40,width:40,borderRadius:5,backgroundColor:'lightslategray',display:"flex",flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+          <div style={{height:40,width:60,borderRadius:5,backgroundColor:'lightslategray',display:"flex",flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
           <Typography
             variant="h4"
-            noWrap
+            // noWrap
             component="div"
             sx={{ display: { xs: 'block', sm: 'block' ,} }}
           >
-            in
+            'em
           </Typography>
           </div>
           <Search sx={{color:'lightslategray'}}>
@@ -204,23 +231,25 @@ export default function PrimarySearchAppBar({updateMode}) {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}} component={NavLink} to="/login">
-              <Badge badgeContent={4} color="error">
+          <IconButton  size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}} component={NavLink} to="/feed">
+              <Badge badgeContent={2} color="error">
+              
                 <Home />
               </Badge>
             </IconButton>
-          <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}}>
+          <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}} component={NavLink} to="/jobs">
               <Badge badgeContent={4} color="error">
-                <Work />
+                <Work/>
               </Badge>
             </IconButton>
             <IconButton
+            component={NavLink} to="/notification"
               size="large"
-              aria-label="show 17 new notifications"
+              aria-label="show 3 new notifications"
               color="inherit"
               sx={{color:'lightslategray'}}
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={3} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>

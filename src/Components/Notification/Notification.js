@@ -56,7 +56,7 @@ export default function Notification() {
               <ListItemAvatar>
                 <Avatar>{notification.avatar}</Avatar>
               </ListItemAvatar>
-              <ListItemText
+              <ListItemText sx={{color:"text.primary"}}
                 primary={notification.primaryText}
                 secondary={
                   <React.Fragment>

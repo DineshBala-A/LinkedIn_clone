@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 import { Card, CardHeader, CardMedia, CardContent, CardActions, IconButton, Typography, Button, Menu, MenuItem, Avatar, Chip,Collapse, Box } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -9,6 +9,12 @@ import SaveIcon from '@mui/icons-material/Save';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ReportIcon from '@mui/icons-material/Report';
 import WorkIcon from '@mui/icons-material/Work';
+import TextField from '@mui/material/TextField';
+import Send from '@mui/icons-material/Send';
+import AddPost from './AddPost';
+import { host } from '../../host';
+import { MyContext } from '../MyContextProvider';
+
 
 const CommentForm = () => {
   const handleSubmit = (event) => {
@@ -17,16 +23,16 @@ const CommentForm = () => {
   };
 
   const existingComments = [
-    { id: 1, avatar: '/static/images/avatar/1.jpg', userName: 'Dinesh', text: 'This looks delicious!' },
-    { id: 2, avatar: '/static/images/avatar/2.jpg', userName: 'Dharun', text: 'Can\'t wait to try this recipe!' },
-    { id: 3, avatar: '/static/images/avatar/3.jpg', userName: 'Manoj', text: 'Yum! Paella is one of my favorites.' },
+    { id: 1, avatar: "", userName: 'Dinesh', text: 'kfjdkfjslkfjsalfj fkjdfjaslf dsa' },
+    { id: 2, avatar: "", userName: 'Dharun', text: 'Can\'t wait to try this recipe!' },
+    { id: 3, avatar: "", userName: 'Manoj', text: 'Yum! Paella is one of my favorites.' },
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '16px' }}>
-      <form onSubmit={handleSubmit}>
-        <textarea rows="4" cols="50" placeholder="Write a comment..." />
-        <button type="submit">Submit</button>
+      <form onSubmit={handleSubmit} style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+        <TextField sx={{width:400}} autoComplete='off' placeholder="Write a comment..." />
+        <IconButton type="submit"><Send/></IconButton>
       </form>
       <div>
         {existingComments.map(comment => (
@@ -43,7 +49,12 @@ const CommentForm = () => {
   );
 };
 
-const FeedCard = ({ id, username, subTitle, date, imageUrl, description, expanded, handleExpandClick, tag }) => {
+const FeedCard = ({ id, username, subTitle, date, imageUrl, description, tag }) => {
+  const [expanded,setExpanded]= useState(false);
+
+  const handleExpandClick = (id) => {
+    setExpanded(!expanded);
+  };
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [likes, setLikes] = useState(0);
 
@@ -59,14 +70,14 @@ const FeedCard = ({ id, username, subTitle, date, imageUrl, description, expande
     setLikes(likes + 1);
   };
 
-  const isJob = tag.toLowerCase() === 'job'; // Check if the tag is 'job'
+  const isJob = tag?tag.toLowerCase() === 'job':false; // Check if the tag is 'job'
 
   return (
     <Card sx={{ maxWidth: 545 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+            {username}
           </Avatar>
         }
         action={
@@ -108,12 +119,15 @@ const FeedCard = ({ id, username, subTitle, date, imageUrl, description, expande
         }
         subheader={date}
       />
-      <CardMedia
+      {imageUrl!=null?
+        <CardMedia
         component="img"
-        image={imageUrl}
+        image={imageUrl!=null?imageUrl:""}
         alt={username}
         sx={{ objectFit: 'cover' }}
-      />
+        />
+            
+      :<></>}
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {description}
@@ -133,6 +147,11 @@ const FeedCard = ({ id, username, subTitle, date, imageUrl, description, expande
         <IconButton aria-label="save">
           <SaveIcon />
         </IconButton>
+        {isJob && ( // Conditionally render the button
+          <div style={{ marginLeft: 'auto' }}>
+            <Button variant="contained" color="primary">Apply</Button>
+          </div>
+        )}
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
@@ -145,8 +164,11 @@ const FeedCard = ({ id, username, subTitle, date, imageUrl, description, expande
 
 const ParentComponent = () => {
   const [feedData, setFeedData] = useState([]);
+  const {reducer, forceUpdate}=useContext(MyContext);
   useEffect(()=>{
-    setFeedData([{
+    setFeedData([
+      
+      {
         id: 2,
         username: "Bob",
         subTitle: "Post 2", // Add subTitle here
@@ -156,6 +178,35 @@ const ParentComponent = () => {
         tag: "Job"
       },
       {
+        id: 1,
+        username: "DB",
+        subTitle: "Post 2", // Add subTitle here
+        date: "October 2, 2024",
+        imageUrl: "https://th.bing.com/th/id/OIP.ctMjmVft35BgBCwgMmRU6gAAAA?rs=1&pid=ImgDetMain",
+        description: `About the job
+        Basic Qualifications
+        
+         3+ years of non-internship professional software development experience
+         2+ years of non-internship design or architecture (design patterns, reliability and scaling) of new and existing systems experience
+         Experience programming with at least one software programming language
+        
+        Preferred Qualifications
+        
+         3+ years of full software development life cycle, including coding standards, code reviews, source control management, build processes, testing, and operations experience
+         Bachelor's degree in computer science or equivalent`,
+        tag: "Job"
+      },
+      {
+        id: 4,
+        username: "DB",
+        subTitle: "Post 3", // Add subTitle here
+        date: "October 19, 2024",
+        imageUrl:null,
+        // imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzp4YCVP4fRbPq2fBqSojR1FUtAK3oUN7gCg&usqp=CAU",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa tincidunt nunc pulvinar sapien. Faucibus turpis in eu mi bibendum. In cursus turpis massa tincidunt dui. Quisque id diam vel quam elementum pulvinar etiam non. Lorem ipsum dolor sit amet consectetur adipiscing. Non quam lacus suspendisse faucibus interdum posuere lorem. Adipiscing elit duis tristique sollicitudin nibh sit. Ac turpis egestas maecenas pharetra convallis posuere. Elit ullamcorper dignissim cras tincidunt lobortis. In nibh mauris cursus mattis molestie. Massa sapien faucibus et molestie ac feugiat sed lectus vestibulum. Amet nisl purus in mollis nunc sed id semper.",
+        tag: "genereal"
+      },
+      {
         id: 3,
         username: "Bob",
         subTitle: "Post 3", // Add subTitle here
@@ -163,51 +214,84 @@ const ParentComponent = () => {
         imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzp4YCVP4fRbPq2fBqSojR1FUtAK3oUN7gCg&usqp=CAU",
         description: "Jobs Available",
         tag: "Job"
-      }])
+      },
+      
+    ])
   },[])
-//   useEffect(() => {
-//     // Fetch feed data from an API
-//     const fetchData = async () => {
-//       try {
-//         const response = await fetch('your-api-endpoint');
-//         const data = await response.json();
-//         setFeedData(data);
-//       } catch (error) {
-//         console.error('Error fetching feed data:', error);
-//       }
-//     };
 
-//     fetchData();
-//   }, []);
+  useEffect(()=>{
+    console.log(feedData);
+  },[feedData]);
 
-  const handleExpandClick = (id) => {
-    setFeedData(feedData.map(item => {
-      if (item.id === id) {
-        return {
-          ...item,
-          expanded: !item.expanded
-        };
-      }
-      return item;
-    }));
-  };
+  //FETCH DATA 
+  // useEffect(() => {
+  //   const controller=new AbortController();
+  //   const signal=controller.signal;
+  //   // Fetch feed data from an API
+  //   fetch(`${host}/Post-details`,{
+  //     signal,
+  //     method:"GET",
+  //     headers:{"Content-Type":"application/json",'ngrok-skip-browser-warning': 'any-value'},
+  //   }).then(response=>{
+  //     if(!response.ok){
+  //       throw new Error("Error");
+  //     }
+  //     return response.json();
+  //   }).then(data=>{
+  //     console.log(data);
+  //     setFeedData(data);
+  //   }).catch(e=>{
+  //     console.error(e.message);
+  //   })
+  //   return(()=>{
+  //     controller.abort();
+  //   })
+  // }, [reducer]);
+
+  
 
   return (
     <Box sx={{display:"flex",flexDirection:"column",gap:2}}>
-      {feedData.map(feed => (
-        <FeedCard
-          key={feed.id}
-          id={feed.id}
-          username={feed.username}
-          subTitle={feed.subTitle}
-          date={feed.date}
-          imageUrl={feed.imageUrl}
-          description={feed.description}
-          expanded={feed.expanded}
-          handleExpandClick={() => handleExpandClick(feed.id)}
-          tag={feed.tag}
-        />
-      ))}
+      {/* {feedData.map((feed,index) => ////////////////////// */}
+      {feedData.map(obj => 
+        // {console.log(obj)}
+        (
+          <FeedCard
+            id={obj.id}
+            key={obj.id}
+            username={obj.username}
+            subTitle={obj.subTitle}
+            date={obj.date}
+            imageUrl={obj.imageUrl}
+            description={obj.description}
+            expanded={obj.expanded}
+            // handleExpandClick={() => handleExpandClick(obj.id)}
+            tag={obj.type}
+          />
+        )
+      )
+      // { 
+      //   console.log(feed[0]);
+      // }
+
+      //FETCH FROM DATABASE
+      // (
+      //   <FeedCard
+      //     // id={feed[0].id}
+      //     id={index}
+      //     key={index}
+      //     username={feed[0].user.username}
+      //     subTitle={feed[0].postDate}
+      //     date={feed[0].date}
+      //     imageUrl={feed[0].media}
+      //     description={feed[0].description}
+      //     expanded={false}
+      //     // handleExpandClick={() => handleExpandClick(feed[0].id)}
+      //     tag={feed[0].type}
+      //   />
+      // )
+      // )
+      }
     </Box>
   );
 };

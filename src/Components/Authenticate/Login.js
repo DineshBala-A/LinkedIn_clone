@@ -16,14 +16,14 @@ import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';
 import { host } from '../../host';
 import { useContext } from 'react';
-import {MyContextProvider,MyContext} from '../../MyContextProvider';
+import {MyContextProvider,MyContext} from '../MyContextProvider';
 import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://dineshbala.netlify.app">
+      <Link color="inherit" href="https://dineshbala.netlify.app" target="_blank">
         dineshbala
       </Link>{' '}
       {new Date().getFullYear()}
@@ -36,9 +36,8 @@ function Copyright(props) {
 
 
 export default function SignIn() {
-  // const {user_id,set_user_id}=useContext(MyContext);
-  // console.log(user_id)
-  const navigate = useNavigate();
+  const {user_id,set_user_id}=useContext(MyContext);
+const navigate = useNavigate();
 const theme = useTheme();
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -54,7 +53,8 @@ const theme = useTheme();
     {
       signal,
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      // headers:{"Content-Type":"application/json"},
+      headers:{"Content-Type":"application/json",'ngrok-skip-browser-warning': 'any-value'},
       body:JSON.stringify({"email":data.get("email"),"password":data.get("password")}),
     }
   ).then(response=>{
@@ -65,7 +65,8 @@ const theme = useTheme();
   }).then(data=>{
     console.log("login success")
     console.log(data);
-    navigate('/feed', { state: { user_id: data.userid } });
+    set_user_id(data);
+    navigate('/', { state: { user_id: data } });
   }).catch(e=>{
     console.error(e.message);
   })

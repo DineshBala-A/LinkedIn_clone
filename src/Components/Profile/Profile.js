@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Avatar, Typography, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import {useTheme} from '@emotion/react';
+import { Cancel } from '@mui/icons-material';
+import { host } from '../../host';
 const UserInfo = () => {
   const theme=useTheme()
   const [editMode, setEditMode] = useState(false);
@@ -24,11 +26,15 @@ const UserInfo = () => {
     setUserInfo({ ...userInfo, [field]: value });
   };
 
+  useEffect(()=>{
+    // fetch(`${host}/Profile`)
+  },[])
+
   return (
     <Box sx={{  padding: 2 }}>
       <Box display="flex" alignItems="center" sx={{bgcolor:theme.palette.mode=="light"?"":""}}>
         <Box flexGrow={1}>
-          <Box sx={{ px: 20 }}>
+          <Box sx={{ px: {"md":20} }}>
             <Avatar
               alt="Dinesh bala "
               src="/public/img/profile2.png"
@@ -36,13 +42,14 @@ const UserInfo = () => {
             />
             <Box>
             <Box>
-          <Button onClick={handleEdit} startIcon={<EditIcon />}>
-            {editMode ? 'Save' : 'Modify'}
-          </Button>
+          
           {editMode ?
-          <Button onClick={handleEdit} startIcon={<EditIcon />}>
+          <Button onClick={handleEdit} startIcon={<Cancel />} color="error">
             {editMode ? 'Cancel' : ''}
           </Button>:<></>}
+          <Button onClick={handleEdit} startIcon={<EditIcon />} >
+            {editMode ? 'Save' : 'Edit'}
+          </Button>
         </Box> 
               <TextField
                 label="Username"

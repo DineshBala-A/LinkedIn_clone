@@ -116,8 +116,8 @@ export default function PrimarySearchAppBar({updateMode}) {
       <MenuItem onClick={handleMenuClose} component={NavLink} to="/profile">Profile</MenuItem>
       {/* <MenuItem onClick={handleMenuClose} component={NavLink} to="/">Home</MenuItem>
       <MenuItem onClick={handleMenuClose} component={NavLink} to="/profile">Notifi</MenuItem> */}
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose} component={NavLink} to="/Login">Sign out</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={NavLink} to="/accounts">My account</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={NavLink} to="/login">Sign out</MenuItem>
     </Menu>
   );
 
@@ -138,7 +138,7 @@ export default function PrimarySearchAppBar({updateMode}) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >  
-      <MenuItem onClick={handleProfileMenuOpen} >
+      <MenuItem component={NavLink} to="/profile">
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -151,7 +151,7 @@ export default function PrimarySearchAppBar({updateMode}) {
         </IconButton >
         <p>Profile</p>
       </MenuItem>
-      <MenuItem component={NavLink} to="/feed">
+      <MenuItem component={NavLink} to="/">
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={2} color="error">
             <Home />
@@ -199,7 +199,7 @@ export default function PrimarySearchAppBar({updateMode}) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{bgcolor:theme.palette.background.paper,px:{sx:0,md:40}}} >
+      <AppBar position="fixed" sx={{bgcolor:theme.palette.background.paper,px:{sx:0,sm:20,lg:40}}} >
         <Toolbar>
           {/* <IconButton
             size="large"
@@ -210,17 +210,17 @@ export default function PrimarySearchAppBar({updateMode}) {
           >
             <MenuIcon />
           </IconButton> */}
-          <div style={{height:40,width:60,borderRadius:5,backgroundColor:'lightslategray',display:"flex",flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+          <div style={{height:40,width:40,borderRadius:5,backgroundColor:'lightslategray',display:"flex",flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
           <Typography
             variant="h4"
             // noWrap
             component="div"
             sx={{ display: { xs: 'block', sm: 'block' ,} }}
           >
-            'em
+            in
           </Typography>
           </div>
-          <Search sx={{color:'lightslategray'}}>
+          <Search sx={{color:"GrayText"}}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -231,7 +231,7 @@ export default function PrimarySearchAppBar({updateMode}) {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <IconButton  size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}} component={NavLink} to="/feed">
+          <IconButton  size="large" aria-label="show 4 new mails" color="inherit" sx={{color:'lightslategray'}} component={NavLink} to="/">
               <Badge badgeContent={2} color="error">
               
                 <Home />

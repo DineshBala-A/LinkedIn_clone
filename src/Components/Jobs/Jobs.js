@@ -1,14 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import JobListing from './JobListing'; // Assuming you have the JobListing component in a separate file
+import { host } from '../../host';
+// import { ThemeContext } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 const JobsPage = () => {
+  const [jobList,setJobList]=useState([]);
+  const theme=useTheme();
   // Sample job listings data (replace with actual data from your backend)
-  const jobListings = [
-    { id: 1, title: 'Software Engineer', company: 'TechCo', location: 'San Francisco, CA', description: 'Join our team of innovative engineers!' },
-    { id: 2, title: 'Product Manager', company: 'StartupX', location: 'New York, NY', description: 'Seeking a dynamic product manager to lead our team.' },
-    { id: 3, title: 'Data Analyst', company: 'DataCorp', location: 'Seattle, WA', description: 'Analyzing data to drive business insights.' },
-    // Add more job listings as needed
-  ];
+
+  useEffect(()=>{
+    const controller=new AbortController();
+    const signal=controller.signal;
+    fetch(`${host}/`,{
+      signal,
+      method:"GET",
+      headers:{"Content-Type":"application/json"}
+    }).then(response=>{
+      if(!response.ok){
+        throw new Error("ERROR");
+      }
+      return response.json();
+    }).then(data=>{
+      console.log(data);
+      // setJobList(data);
+    }).catch(e=>{
+      console.error(e);
+    })
+    return(()=>{
+      controller.abort();
+    })
+  },[])
+
+  useEffect(()=>{
+    setJobList( [
+        { id: 1, title: 'Software Engineer', company: 'TechCo', location: 'San Francisco, CA', description: 'Join our team of innovative engineers!' },
+        { id: 2, title: 'Product Manager', company: 'StartupX', location: 'New York, NY', description: 'Seeking a dynamic product manager to lead our team.' },
+        { id: 3, title: 'Data Analyst', company: 'DataCorp', location: 'Seattle, WA', description: 'Analyzing data to drive business insights.' },
+        // Add more job listings as needed
+      ])
+  },[])
+  // const jobListings = [
+  //   { id: 1, title: 'Software Engineer', company: 'TechCo', location: 'San Francisco, CA', description: 'Join our team of innovative engineers!' },
+  //   { id: 2, title: 'Product Manager', company: 'StartupX', location: 'New York, NY', description: 'Seeking a dynamic product manager to lead our team.' },
+  //   { id: 3, title: 'Data Analyst', company: 'DataCorp', location: 'Seattle, WA', description: 'Analyzing data to drive business insights.' },
+  //   // Add more job listings as needed
+  // ];
   // State for filters
   const [locationFilter, setLocationFilter] = useState('');
   const [keywordFilter, setKeywordFilter] = useState('');
@@ -25,14 +62,14 @@ const JobsPage = () => {
   };
   return (
     <Container sx={{ px: { sx: 0, sm: 2, md: 3, lg: 30 }, bgcolor: "ligthq" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4"  sx={{color:theme.palette.text.primary}}>
         Jobs
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           {/* Filters */}
-          <Typography variant="h6" gutterBottom>
-            Filters
+          <Typography variant="h6" sx={{color:theme.palette.text.primary}}>
+            Filter
           </Typography>
           <Divider style={{ margin: '16px 0' }} />
           {/* Location filter */}
@@ -61,7 +98,7 @@ const JobsPage = () => {
         </Grid>
         <Grid item xs={12} md={8}>
           {/* Job Listings */}
-          {jobListings.filter(filterJobs).map(job => (
+          {jobList.filter(filterJobs).map(job => (
             <JobListing key={job.id} job={job} />
           ))}
         </Grid>

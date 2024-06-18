@@ -6,10 +6,10 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import MyContextProvider from '../src/MyContextProvider';
+import {MyContextProvider} from './Components/MyContextProvider';
 
 const App= () => {
-  const [mode,setMode]=useState('dark')
+  const [mode,setMode]=useState('light')
 
 
   const updateMode=(receivedMode)=>{
@@ -63,15 +63,17 @@ const App= () => {
   return (
     <>
         <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <Router>
-            <SnackbarProvider maxSnack={3}>
-              <Box>
-                <Screen updateMode={updateMode}/>
-              </Box>
-              </SnackbarProvider>  
-          </Router>
-        </ThemeProvider>  
+        <MyContextProvider>
+          <ThemeProvider theme={theme}>
+            <Router>
+              <SnackbarProvider maxSnack={3}>
+                <Box>
+                  <Screen updateMode={updateMode}/>
+                </Box>
+                </SnackbarProvider>  
+            </Router>
+          </ThemeProvider> 
+        </MyContextProvider> 
     </>
   );
 };
